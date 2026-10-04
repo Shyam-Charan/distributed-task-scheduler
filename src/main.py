@@ -1,5 +1,10 @@
 """Runnable scheduler demo."""
-from scheduler import Scheduler
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.scheduler import Scheduler
 
 
 def square(x):

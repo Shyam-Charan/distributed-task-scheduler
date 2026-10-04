@@ -20,7 +20,8 @@ def test_priority_queue_orders_high_priority_first():
 def test_scheduler_executes_task_and_returns_future():
     scheduler = Scheduler(workers=2)
     try:
-        future = scheduler.submit(lambda x: x * x, 7, priority=3)
+        scheduler.submit(lambda x: x * x, 7, priority=3)
+        future = scheduler.run_once()
         assert future.result(timeout=2) == 49
     finally:
         scheduler.shutdown()
@@ -32,3 +33,10 @@ def test_scheduler_empty_queue_returns_none():
         assert scheduler.run_once(timeout=0) is None
     finally:
         scheduler.shutdown()
+
+
+def test_equal_priority_tasks_are_fifo():
+    q = TaskQueue()
+    for name in ["first", "second", "third"]:
+        q.put(name, priority=5)
+    assert [q.get(), q.get(), q.get()] == ["first", "second", "third"]
